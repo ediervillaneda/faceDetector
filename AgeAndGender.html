@@ -2,13 +2,9 @@
 <html>
 
 <head>
-  <script src="face-api.min.js"></script>
-  <script src="js/commons.js"></script>
-  <script src="js/faceDetectionControls.js"></script>
-  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css">
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -55,6 +51,11 @@
     </span>
     <!-- tiny_face_detector_controls -->
 
+    <script src="face-api.min.js"></script>
+    <script src="js/commons.js"></script>
+    <script src="js/faceDetectionControls.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </body>
 
 <script>
@@ -119,8 +120,8 @@
   async function run() {
     // load face detection and face expression recognition models
     await changeFaceDetector(TINY_FACE_DETECTOR)
-    await faceapi.nets.ageGenderNet.load('https://ediervillaneda.github.io/faceDetector/model')
-    await faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/model'),
+    await faceapi.nets.ageGenderNet.load('https://ediervillaneda.github.io/faceDetector/models')
+    await faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
 
       changeInputSize(224)
 
@@ -137,6 +138,7 @@
     run()
   })
 </script>
+
 </body>
 
 </html>

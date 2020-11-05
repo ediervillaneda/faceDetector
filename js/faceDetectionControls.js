@@ -80,7 +80,7 @@ async function changeFaceDetector(detector) {
 
   $('#loader').show()
   if (!isFaceDetectionModelLoaded()) {
-    await getCurrentFaceDetectionNet().load('https://ediervillaneda.github.io/faceDetector/model')
+    await getCurrentFaceDetectionNet().load('https://ediervillaneda.github.io/faceDetector/models')
   }
 
   $('#loader').hide()

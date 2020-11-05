@@ -3,8 +3,8 @@ const video = document.getElementById('video')
 async function run() {
   // load face detection and face expression recognition models
   await changeFaceDetector(TINY_FACE_DETECTOR)
-  await faceapi.nets.ageGenderNet.load('https://ediervillaneda.github.io/faceDetector/model')
-  await faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/model'),
+  await faceapi.nets.ageGenderNet.load('https://ediervillaneda.github.io/faceDetector/models')
+  await faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
 
     changeInputSize(224)
 
@@ -16,11 +16,11 @@ async function run() {
 }
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('https://ediervillaneda.github.io/faceDetector/model'),
-  faceapi.nets.faceLandmark68Net.loadFromUri('https://ediervillaneda.github.io/faceDetector/model'),
-  faceapi.nets.faceRecognitionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/model'),
-  faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/model'),
-  faceapi.nets.ageGenderNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/model')
+  faceapi.nets.tinyFaceDetector.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
+  faceapi.nets.faceLandmark68Net.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
+  faceapi.nets.faceRecognitionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
+  faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
+  faceapi.nets.ageGenderNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models')
 ]).then(startVideo)
 
 function startVideo() {
