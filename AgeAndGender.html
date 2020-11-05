@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="face-api.min.js"></script>
+  <script src="js/commons.js"></script>
+  <script src="js/faceDetectionControls.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</head>
+
+<body>
+  <div id="navbar"></div>
+  <div class="center-content page-container">
+
+    <div class="progress" id="loader">
+      <div class="indeterminate"></div>
+    </div>
+    <div style="position: relative" class="margin">
+      <video onloadedmetadata="onPlay(this)" id="inputVideo" autoplay muted playsinline></video>
+      <canvas id="overlay" />
+    </div>
+
+    <div class="row side-by-side">
+
+      <!-- fps_meter -->
+      <div id="fps_meter" class="row side-by-side">
+        <div>
+          <label for="time">Tiempo:</label>
+          <input disabled value="-" id="time" type="text" class="bold">
+          <label for="fps">Fps Estimados:</label>
+          <input disabled value="-" id="fps" type="text" class="bold">
+        </div>
+      </div>
+      <!-- fps_meter -->
+
+    </div>
+
+    <!-- tiny_face_detector_controls -->
+    <span id="tiny_face_detector_controls">
+      <div class="row side-by-side">
+        <div class="row">
+          <label for="scoreThreshold">Coincidencia:</label>
+          <input disabled value="0.5" id="scoreThreshold" type="text" class="bold">
+        </div>
+        <button class="waves-effect waves-light btn" onclick="onDecreaseScoreThreshold()">
+          <i class="material-icons left">-</i>
+        </button>
+        <button class="waves-effect waves-light btn" onclick="onIncreaseScoreThreshold()">
+          <i class="material-icons left">+</i>
+        </button>
+      </div>
+    </span>
+    <!-- tiny_face_detector_controls -->
+
+</body>
+
+<script>
+  let forwardTimes = []
+  let predictedAges = []
+
+  function updateTimeStats(timeInMs) {
+    forwardTimes = [timeInMs].concat(forwardTimes).slice(0, 30)
+    const avgTimeInMs = forwardTimes.reduce((total, t) => total + t) / forwardTimes.length
+    $('#time').val(`${Math.round(avgTimeInMs)} ms`)
+    $('#fps').val(`${faceapi.utils.round(1000 / avgTimeInMs)}`)
+  }
+
+  function interpolateAgePredictions(age) {
+    predictedAges = [age].concat(predictedAges).slice(0, 30)
+    const avgPredictedAge = predictedAges.reduce((total, a) => total + a) / predictedAges.length
+    return avgPredictedAge
+  }
+
+  async function onPlay() {
+    const videoEl = $('#inputVideo').get(0)
+
+    if (videoEl.paused || videoEl.ended || !isFaceDetectionModelLoaded())
+      return setTimeout(() => onPlay())
+
+    const options = getFaceDetectorOptions()
+
+    const ts = Date.now()
+
+    const result = await faceapi.detectSingleFace(videoEl, options)
+      .withAgeAndGender().withFaceExpressions();
+
+    updateTimeStats(Date.now() - ts)
+
+    if (result) {
+      const canvas = $('#overlay').get(0)
+      const dims = faceapi.matchDimensions(canvas, videoEl, true)
+
+      const resizedResult = faceapi.resizeResults(result, dims)
+      faceapi.draw.drawDetections(canvas, resizedResult);
+      faceapi.draw.drawFaceExpressions(canvas, resizedResult);
+
+
+      const { age, gender, genderProbability } = resizedResult
+
+      // interpolate gender predictions over last 30 frames
+      // to make the displayed age more stable
+      const interpolatedAge = interpolateAgePredictions(age)
+      new faceapi.draw.DrawTextField(
+        [
+          `${faceapi.utils.round(interpolatedAge, 0)} años`,
+          `${gender} (${faceapi.utils.round(genderProbability * 100)}) %`
+          // `${gender} (${faceapi.utils.round(genderProbability)})`
+        ],
+        result.detection.box.bottomRight
+      ).draw(canvas)
+    }
+
+    setTimeout(() => onPlay())
+  }
+
+  async function run() {
+    // load face detection and face expression recognition models
+    await changeFaceDetector(TINY_FACE_DETECTOR)
+    await faceapi.nets.ageGenderNet.load('https://ediervillaneda.github.io/faceDetector/model')
+    await faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/model'),
+
+      changeInputSize(224)
+
+    // try to access users webcam and stream the images
+    // to the video element
+    const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
+    const videoEl = $('#inputVideo').get(0)
+    videoEl.srcObject = stream
+  }
+
+  function updateResults() { }
+
+  $(document).ready(function () {
+    run()
+  })
+</script>
+</body>
+
+</html>
