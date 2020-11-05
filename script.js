@@ -4,7 +4,8 @@ Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
   faceapi.nets.faceLandmark68Net.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
   faceapi.nets.faceRecognitionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
-  faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models')
+  faceapi.nets.faceExpressionNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models'),
+  faceapi.nets.ageGenderNet.loadFromUri('https://ediervillaneda.github.io/faceDetector/models')
 ]).then(startVideo)
 
 function startVideo() {
@@ -21,11 +22,13 @@ video.addEventListener('play', () => {
   const displaySize = { width: video.width, height: video.height };
   faceapi.matchDimensions(canvas, displaySize);
   setInterval(async () => {
+    // const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions().withAgeAndGender().withFaceDescriptor();
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     faceapi.draw.drawDetections(canvas, resizedDetections);
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+
   }, 100)
 })
