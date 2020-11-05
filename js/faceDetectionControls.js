@@ -15,18 +15,6 @@ function getFaceDetectorOptions() {
   return new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold })
 }
 
-function onIncreaseMinConfidence() {
-  minConfidence = Math.min(faceapi.utils.round(minConfidence + 0.1), 1.0)
-  $('#minConfidence').val(minConfidence)
-  updateResults()
-}
-
-function onDecreaseMinConfidence() {
-  minConfidence = Math.max(faceapi.utils.round(minConfidence - 0.1), 0.1)
-  $('#minConfidence').val(minConfidence)
-  updateResults()
-}
-
 function onInputSizeChanged(e) {
   changeInputSize(e.target.value)
   updateResults()
@@ -40,7 +28,7 @@ function changeInputSize(size) {
   inputSizeSelect.material_select()
 }
 
-function onIncreaseScoreThreshold() {
+function decrementarCoincidencia() {
   scoreThreshold = Math.min(faceapi.utils.round(scoreThreshold + 0.1), 1.0)
   if (scoreThreshold >= 1) {
     scoreThreshold = scoreThreshold - 0.1;
@@ -49,23 +37,13 @@ function onIncreaseScoreThreshold() {
   updateResults()
 }
 
-function onDecreaseScoreThreshold() {
+function incrementarCoincidencia() {
   scoreThreshold = Math.max(faceapi.utils.round(scoreThreshold - 0.1), 0.1)
   if (scoreThreshold <= 0) {
     scoreThreshold = scoreThreshold + 0.1;
   }
   $('#scoreThreshold').val(scoreThreshold)
   updateResults()
-}
-
-function onIncreaseMinFaceSize() {
-  minFaceSize = Math.min(faceapi.utils.round(minFaceSize + 20), 300)
-  $('#minFaceSize').val(minFaceSize)
-}
-
-function onDecreaseMinFaceSize() {
-  minFaceSize = Math.max(faceapi.utils.round(minFaceSize - 20), 50)
-  $('#minFaceSize').val(minFaceSize)
 }
 
 function getCurrentFaceDetectionNet() {

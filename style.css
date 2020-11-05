@@ -9,7 +9,7 @@ body {
   right: 0;
   margin: auto;
   margin-top: 20px;
-  padding-left: 280px;
+  /* padding-left: 280px; */
   display: inline-flex !important;
 }
 
@@ -27,7 +27,7 @@ body {
 }
 
 .center-content {
-  display: flex;
+  display: flex!important;
   flex-direction: column;
   justify-content: center;
   align-items: center;

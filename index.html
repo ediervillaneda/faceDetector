@@ -9,14 +9,59 @@
   <meta name="robots" content="index, follow" />
   <title>Face Detector</title>
 
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <video id="video" width="800" height="600" autoplay muted></video>
+  <div class="center-content page-container">
 
-  <script defer src="./face-api.min.js"></script>
-  <script defer src="./script.js"></script>
+    <div class="progress" id="loader">
+      <div class="indeterminate"></div>
+    </div>
+    <div style="position: relative" class="margin">
+      <video onloadedmetadata="onPlay(this)" id="inputVideo" autoplay muted playsinline></video>
+      <canvas id="overlay" />
+    </div>
+
+    <div class="row side-by-side">
+
+      <!-- fps_meter -->
+      <div id="fps_meter" class="row side-by-side">
+        <div>
+          <label for="time">Tiempo de reconocimiento:</label>
+          <input disabled value="-" id="time" type="text" class="bold">
+          <label for="fps">Fps Estimados:</label>
+          <input disabled value="-" id="fps" type="text" class="bold">
+        </div>
+      </div>
+      <!-- fps_meter -->
+
+    </div>
+
+    <!-- tiny_face_detector_controls -->
+    <span id="tiny_face_detector_controls">
+      <div class="row side-by-side">
+        <div class="row">
+          <label for="scoreThreshold">Coincidencia:</label>
+          <input disabled value="0.5" id="scoreThreshold" type="text" class="bold">
+        </div>
+        <button class="waves-effect waves-light btn" onclick="incrementarCoincidencia()">
+          <em class="material-icons left">-</em>
+        </button>
+        <button class="waves-effect waves-light btn" onclick="decrementarCoincidencia()">
+          <em class="material-icons left">+</em>
+        </button>
+      </div>
+    </span>
+    <!-- tiny_face_detector_controls -->
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="face-api.min.js"></script>
+    <script src="js/commons.js"></script>
+    <script src="js/faceDetectionControls.js"></script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>
